@@ -54,6 +54,7 @@ const Home = () => {
         </Wrapper>
         <h1>View Post</h1>{" "}
         <PostHolder>
+          {getPost?.isLoading ? <p>Loading content...</p> : null}
           {getPost.data?.map((props: any) => (
             <Post key={props._id}>
               <p>{props.title}</p>
