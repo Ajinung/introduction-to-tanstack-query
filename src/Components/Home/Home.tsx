@@ -2,11 +2,14 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { useQuery } from "@tanstack/react-query";
 import { useMutation } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { getAll, newPost } from "../API/Api";
 
 const Home = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+
+  const queryClient = useQueryClient();
 
   const getPost = useQuery({
     queryKey: ["MyPosts"],
@@ -15,6 +18,9 @@ const Home = () => {
 
   const createPost = useMutation({
     mutationFn: newPost,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries(["MyPosts"]);
+    },
   });
 
   const thisPost = () => {
@@ -28,16 +34,17 @@ const Home = () => {
     <div>
       <Container>
         <Wrapper>
+          <h1>CREATE POST</h1>
           <input
             type="text"
-            placeholder="enter title"
+            placeholder="Enter Post Title"
             onChange={(e) => {
               setTitle(e.target.value);
             }}
           />
           <input
             type="text"
-            placeholder="enter description"
+            placeholder="Enter Post Description"
             onChange={(e) => {
               setDescription(e.target.value);
             }}
@@ -103,6 +110,7 @@ const PostHolder = styled.div`
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
+  margin-bottom: 10px;
 `;
 
 const Container = styled.div`
